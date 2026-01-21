@@ -1,98 +1,101 @@
-const inquirer = require("inquirer");
+const ui = require('./ui');
+const db = require('./queries');
 
+async function start() {
+  while (true) {
+    const { action } = await ui.mainMenu();
 
+    if (action === 'Exit') {
+      console.log('Goodbye!');
+      process.exit();
+    }
 
-//Question for user
-const questions = [
-  {
-    name: "option",
-    type: "list",
-    message:"What do you want to do next",
-    choices: [
-        "View all products", 
-        "View low inventory", 
-        "View all suppliers",
-        "Add a product",
-        "Add a supplier", 
-        "Restock a product (increase quantity)", 
-        "Record a sale (decrease quantity)", 
-        "Update a product (price, supplier, category)", 
-        "Delete a product", "Exit"],
-  }
-  ];
+    if (action === 'View all products') {
+      const { rows } = await db.getProducts();
+      console.table(rows);
+    }
 
+    if (action === 'View low inventory') {
+      const { rows } = await db.getLowInventory();
+      console.table(rows);
+    }
 
+    if (action === 'View all suppliers') {
+      const { rows } = await db.getSuppliers();
+      console.table(rows);
+    }
 
-class CLI {
-  run() {
-    return inquirer
-      .prompt(questions)
-      .then(({ option }) => {
-        let nextStep;
-        switch (option) {
-          case "View all products":
-            pool.query('SELECT * FROM products', function (err, { rows }) {
-  console.log(rows);
-});
-            break;
+    if (action === 'Add a supplier') {
+      const answers = await require('inquirer').prompt([
+        { name: 'name', message: 'Supplier name:' },
+        { name: 'email', message: 'Email:' },
+        { name: 'phone', message: 'Phone:' }
+      ]);
+      await db.addSupplier(answers);
+      console.log('Supplier added.');
+    }
 
-          case "View low inventory":
-            nextStep  = new Square();
-            break;
-
-            case "View all suppliers":
-            nextStep  = new Square();
-            break;
-
-             case "Add a product":
-            nextStep  = new Square();
-            break;
-
-            case "Add a supplier":
-            nextStep  = new Square();
-            break;
-
-            case "Restock a product (increase quantity)":
-            nextStep  = new Square();
-            break;
-
-            case "Record a sale (decrease quantity)":
-            nextStep  = new Square();
-            break;
-
-            case "Update a product (price, supplier, category)":
-            nextStep  = new Square();
-            break;
-
-            case "Delete a product":
-            nextStep  = new Square();
-            break;
-
-            case "Exit":
-            nextStep  = new Square();
-            break;
-
-
-          default:
-            nextStep = new Triangle();
-            break;
+    if (action === 'Add a product') {
+      const suppliers = await db.getSuppliers();
+      const answers = await require('inquirer').prompt([
+        { name: 'name', message: 'Product name:' },
+        { name: 'category', message: 'Category:' },
+        { name: 'price', message: 'Price:' },
+        { name: 'quantity', message: 'Starting quantity:' },
+        {
+          type: 'list',
+          name: 'supplier_id',
+          message: 'Supplier:',
+          choices: suppliers.rows.map(s => ({ name: s.name, value: s.id }))
         }
-        shape.setColor(shapeColor);
+      ]);
+      await db.addProduct(answers);
+      console.log('Product added.');
+    }
 
-        const svg = new SVG();
-        svg.setText(text, textColor);
-        svg.setShape(shape);
-        return writeFile("logo.svg", svg.render());
-      })
-      .then(() => {
-        console.log(chalk.green("✅ Generated logo.svg"));
-      })
-      .catch((error) => {
-        console.log(chalk.red("❌ Oops! Something went wrong."));
-        console.log(chalk.red("Reason:", err.message || err));
-        process.exit(1);
+    if (action === 'Restock a product') {
+      const { productId } = await ui.selectProduct();
+      const { amount } = await require('inquirer').prompt({
+        name: 'amount',
+        message: 'Amount to add:',
+        validate: v => v > 0
       });
+      await db.updateQuantity(productId, amount);
+      console.log('Stock updated.');
+    }
+
+    if (action === 'Record a sale') {
+      const { productId } = await ui.selectProduct();
+      const { amount } = await require('inquirer').prompt({
+        name: 'amount',
+        message: 'Amount sold:',
+        validate: v => v > 0
+      });
+      await db.updateQuantity(productId, -amount);
+      console.log('Sale recorded.');
+    }
+
+    if (action === 'Update a product') {
+      const { productId } = await ui.selectProduct();
+      const { field, value } = await require('inquirer').prompt([
+        {
+          type: 'list',
+          name: 'field',
+          choices: ['price', 'category', 'supplier_id']
+        },
+        { name: 'value', message: 'New value:' }
+      ]);
+      await db.updateProduct(productId, field, value);
+      console.log('Product updated.');
+    }
+
+    if (action === 'Delete a product') {
+      const { productId } = await ui.selectProduct();
+      await db.deleteProduct(productId);
+      console.log('Product deleted.');
+    }
   }
 }
 
-module.exports = CLI;
+
+module.exports = start;

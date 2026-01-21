@@ -1,25 +1,31 @@
-INSERT INTO suppliers (id, name, email, phone)
-VALUES
-  (1, 'Tony Montana', 'scarface@cuban.com', '646-6666666'),
-  (2, 'Pablito', 'escobar@colombian.com', '646-6666667'),
-  (3, 'Sito', 'minianco@gallego.com', '646-6666668'),
-  (4, 'Chapo', 'elchapo@mexican.com', '646-6666669'),
-  (5, 'El Patron', 'patron@andes.com', '646-6666670'),
-  (6, 'Don Vito', 'corleone@sicilian.com', '646-6666671'),
-  (7, 'Big Mike', 'mike@brooklyn.com', '646-6666672'),
-  (8, 'La Reina', 'reina@ibiza.com', '646-6666673');
 
-INSERT INTO products (id, name, category, price, quantity, supplier_id)
+INSERT INTO suppliers (name, email, phone)
 VALUES
-  (1, 'Yeyo', 'Powder', 50.10, 2, 1),
-  (2, 'Blow', 'Powder', 10.00, 3, 2),
-  (3, 'Farina', 'Flour', 20.31, 4, 3),
-  (4, 'Snow', 'Flour', 30.40, 6, 4),
-  (5, 'Sugar Rush', 'Powder', 15.75, 12, 5),
-  (6, 'White Gold', 'Powder', 99.99, 1, 1),
-  (7, 'Fine Grain', 'Flour', 8.50, 25, 3),
-  (8, 'Ice Dust', 'Powder', 42.00, 0, 2),
-  (9, 'Soft Mix', 'Flour', 5.25, 18, 6),
-  (10, 'Premium Batch', 'Powder', 120.00, 5, 7),
-  (11, 'Daily Use', 'Flour', 3.99, 40, 8),
-  (12, 'Midnight Snow', 'Powder', 65.00, 7, 4);
+  ('Sonae MC Electronics', 'fornecedores@sonaemc.pt', '+351 21 000 1001'),
+  ('Worten Distribuição', 'compras@worten.pt', '+351 21 000 1002'),
+  ('PCDiga Wholesale', 'wholesale@pcdiga.com', '+351 21 000 1003'),
+  ('Chip7 Distribuição', 'b2b@chip7.pt', '+351 21 000 1004'),
+  ('Infordata Sistemas', 'sales@infordata.pt', '+351 21 000 1005'),
+  ('JP Sá Couto (Insys)', 'procurement@insys.pt', '+351 21 000 1006');
+
+INSERT INTO products (name, category, price, quantity, supplier_id)
+VALUES
+  ('Wireless Mouse', 'Electronics', 19.99, 14, 2),
+  ('Mechanical Keyboard', 'Electronics', 74.99, 5, 2),
+  ('USB-C Cable (1m)', 'Electronics', 8.49, 32, 3),
+  ('27-inch LED Monitor', 'Electronics', 189.90, 2, 3),
+  ('Laptop Stand', 'Electronics', 27.50, 8, 3),
+
+  ('Desktop PC Office Model', 'Computers', 549.00, 3, 6),
+  ('Laptop Business Series', 'Computers', 899.00, 1, 6),
+  ('SSD 1TB NVMe', 'Components', 89.99, 11, 5),
+  ('DDR4 RAM 16GB', 'Components', 64.50, 9, 5),
+  ('Power Supply 650W', 'Components', 79.00, 4, 5),
+
+  ('Network Switch (8-port)', 'Networking', 49.99, 6, 4),
+  ('Wireless Router AX3000', 'Networking', 119.00, 2, 4),
+  ('Ethernet Cable CAT6 (5m)', 'Networking', 6.99, 25, 4),
+
+  ('Laser Printer Mono', 'Office Electronics', 159.00, 2, 1),
+  ('Printer Toner Black', 'Office Electronics', 68.90, 0, 1),
+  ('UPS Battery Backup 1200VA', 'Office Electronics', 199.00, 3, 1);
