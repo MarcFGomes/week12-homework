@@ -4,7 +4,7 @@ A Node.js command-line inventory management application built with Inquirer, Pos
 This app allows users to manage products, suppliers, and inventory levels directly from the terminal.
 
 Codecademy Full-Stack Bootcamp — Week 12 Challenge
-![Watch Video](./Assets/demo.gif)
+![Watch Video](./Assets/Demo.gif)
 
 ## 📦 Features
 
